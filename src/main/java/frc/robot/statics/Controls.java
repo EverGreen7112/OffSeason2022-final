@@ -154,11 +154,11 @@ public static void unDriveStright(){
 
   public static void shoot() {
     float distance = m_hubVision.getZ();
-    double speed = calcTrajectory.calcSpeed(distance, Constants.PhysicalConsts.SHOOT_HEIGHT,
-    Constants.PhysicalConsts.SHOOT_ANGLE);
+    // double speed = calcTrajectory.calcSpeed(distance, Constants.PhysicalConsts.SHOOT_HEIGHT,
+    // Constants.PhysicalConsts.SHOOT_ANGLE);
     // m_shootPidMotor.set(speed * Constants.Speeds.SHOOT);
     // m_shootPidMotor.runMotor();
-    Constants.UsableMotors.FLY_WHEEL.set(ControlMode.PercentOutput, 0.6753);
+    Constants.UsableMotors.FLY_WHEEL.set(ControlMode.PercentOutput, 0.69);
   }
   
 

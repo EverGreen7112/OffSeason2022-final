@@ -24,8 +24,10 @@ public class Autonomus {
         }
     }
     public static void auto(){
+        startTime = System.currentTimeMillis();
         Controls.driveStright();
         while(System.currentTimeMillis() - startTime < 3*1000);
+        Controls.tankDrive(0, 0);
         Controls.unDriveStright();
         Controls.shoot();
         while(System.currentTimeMillis() - startTime < 6*1000);

@@ -131,7 +131,7 @@ public final class Constants {
         public static final double speedLimit = 0.8,
                 moveSpeed = 0.6,
                 collectorClose = -0.8,
-                collectorOpen = 0.3,
+                collectorOpen = 0.5,
                 collectorCollect = 0.55,
 
                 SHOOT = 0.6,
