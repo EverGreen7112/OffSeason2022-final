@@ -23,4 +23,15 @@ public class Autonomus {
             Constants.UsableMotors.BOTTOM_STORAGE.set(Constants.Speeds.storageMotor);
         }
     }
+    public static void auto(){
+        Controls.driveStright();
+        while(System.currentTimeMillis() - startTime < 3*1000);
+        Controls.unDriveStright();
+        Controls.shoot();
+        while(System.currentTimeMillis() - startTime < 6*1000);
+        Constants.UsableMotors.STORAGE_TOP.set(Constants.Speeds.storageMotor);
+        Constants.UsableMotors.BOTTOM_STORAGE.set(Constants.Speeds.collectorCollect);
+
+
+    }
 }
