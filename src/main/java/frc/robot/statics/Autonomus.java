@@ -1,5 +1,7 @@
 package frc.robot.statics;
 
+import frc.robot.EverLibEssentials.Motors;
+
 public class Autonomus {
     private static Long startTime;
     private static int eDrive = 3000;
@@ -25,14 +27,24 @@ public class Autonomus {
     }
     public static void auto(){
         startTime = System.currentTimeMillis();
-        Controls.driveStright();
-        while(System.currentTimeMillis() - startTime < 3*1000);
+
+        Controls.tankDrive(0.3, 0.3);
+        Motors.runMotors();
+
+        while(System.currentTimeMillis() - startTime < 1*1000);
         Controls.tankDrive(0, 0);
+        Motors.runMotors();
+
         Controls.unDriveStright();
         Controls.shoot();
+        Motors.runMotors();
+
         while(System.currentTimeMillis() - startTime < 6*1000);
         Constants.UsableMotors.STORAGE_TOP.set(Constants.Speeds.storageMotor);
+        Motors.runMotors();
+
         Constants.UsableMotors.BOTTOM_STORAGE.set(Constants.Speeds.collectorCollect);
+        Motors.runMotors();
 
 
     }

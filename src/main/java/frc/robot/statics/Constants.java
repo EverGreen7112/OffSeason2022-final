@@ -118,7 +118,7 @@ public final class Constants {
         //     fire = 8, 
             
             climberDown = 5,
-            climberUp = 7,
+            climberUp = 9,
             
             storageUp = 6,
             storageDown = 3,

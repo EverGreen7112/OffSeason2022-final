@@ -63,6 +63,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() { 
     Controls.init();
+    Autonomus.auto();
+
     // double[][] speeds = Motors.getRecordingAsDoubleArray();
     // for (int i = 0; i < speeds.length; i++) {
     //   String vals = "";
@@ -79,7 +81,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    Autonomus.auto();
     Motors.runMotors();
   }
 
