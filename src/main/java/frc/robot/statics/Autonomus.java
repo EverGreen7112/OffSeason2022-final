@@ -36,7 +36,7 @@ public class Autonomus {
         Motors.runMotors();
 
         Controls.unDriveStright();
-        Controls.shoot();
+        Controls.shootAuto();
         Motors.runMotors();
 
         while(System.currentTimeMillis() - startTime < 6.7*1000);

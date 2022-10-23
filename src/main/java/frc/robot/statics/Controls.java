@@ -15,11 +15,12 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Controls {
-    private static Joystick m_rightJoystick, m_leftJoystick, m_operator; 
+    private static Joystick m_rightJoystick  = new Joystick(Constants.JoystickPorts.rightJoystick), m_leftJoystick, m_operator; 
 	private static JoystickButton m_cancelAll;
   private static Trigger m_fire;
   private static JoystickButton m_collectorCollect, m_collectorUncollect, m_collectorOpen, m_collectorClose, m_climberDown,
-   m_climberUp, m_storageUp, m_storageDown,m_turbu, m_load, m_turnToShoot,m_driveStright;
+   m_climberUp, m_storageUp, m_storageDown, m_load, m_turnToShoot,m_driveStright, m_turbu = new JoystickButton(m_rightJoystick, 1);
+
    public static Vision m_hubVision = new Vision(Constants.ComPorts.hubVision);
    private static PIDMotor m_shootPidMotor = new PIDMotor(Constants.UsableMotors.FLY_WHEEL,
      Constants.PIDValues.FLY_WHEEL_KP,
@@ -30,10 +31,11 @@ public class Controls {
   public static void init() {
   
     // initialize joysticks and operator
-    m_rightJoystick = new Joystick(Constants.JoystickPorts.rightJoystick);
+    // m_rightJoystick 
     m_leftJoystick = new Joystick(Constants.JoystickPorts.leftJoystick);
     m_operator = new Joystick(Constants.JoystickPorts.operator);
     m_driveStright = new JoystickButton(m_rightJoystick, 4);
+    // m_turbo = new JoystickButton(m_rightJoystick, Constants.ButtonPorts.turbo);
 	  // m_cancelAll =   new JoystickButton(m_rightJoystick,5);
     // initialize buttons for specific commands later on
     m_collectorOpen = new JoystickButton(m_operator, Constants.ButtonPorts.collectorOpen);
@@ -55,7 +57,6 @@ public class Controls {
     for (int i =0; i <= 360; i++){
       m_fire = m_fire.or(new POVButton(m_operator, i));
     }
-	  m_turbu = new JoystickButton(m_rightJoystick, 1);
     turnPID.setSetpoint(0);
     Constants.UsableMotors.CHASSIS_RIGHT.setInverted(true);
     Constants.UsableMotors.COLLECTOR_COLLECT.setInverted(true);
@@ -77,7 +78,11 @@ public class Controls {
       speedVector.x = (speedVector.x / magnitude) *  Constants.Speeds.speedLimit;
       speedVector.y = (speedVector.y / magnitude) *  Constants.Speeds.speedLimit;
     }
+    if(!m_turbu.get()){ 
     tankDrive(speedVector.x, speedVector.y);
+    }else{
+      tankDrive(m_rightJoystick.getY(),  m_leftJoystick.getY() );
+    }
   }
   
   public static void tankDrive(double speedRight, double speedLeft){
@@ -158,8 +163,17 @@ public static void unDriveStright(){
     // Constants.PhysicalConsts.SHOOT_ANGLE);
     // m_shootPidMotor.set(speed * Constants.Speeds.SHOOT);
     // m_shootPidMotor.runMotor();
-    Constants.UsableMotors.FLY_WHEEL.set(ControlMode.PercentOutput, 0.69);
+    Constants.UsableMotors.FLY_WHEEL.set(ControlMode.PercentOutput, 0.69*1.07);
   }
+  public static void shootAuto() {
+    float distance = m_hubVision.getZ();
+    // double speed = calcTrajectory.calcSpeed(distance, Constants.PhysicalConsts.SHOOT_HEIGHT,
+    // Constants.PhysicalConsts.SHOOT_ANGLE);
+    // m_shootPidMotor.set(speed * Constants.Speeds.SHOOT);
+    // m_shootPidMotor.runMotor();
+    Constants.UsableMotors.FLY_WHEEL.set(ControlMode.PercentOutput, 0.69 * 0.87);
+  }
+  
   
 
   public static void movePeriodic() {

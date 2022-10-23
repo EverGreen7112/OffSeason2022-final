@@ -116,21 +116,21 @@ public final class Constants {
             
             load = 8, 
         //     fire = 8, 
-            
-            climberDown = 5,
+            turbo = 1,
+            climberDown = 7,
             climberUp = 9,
             
             storageUp = 6,
             storageDown = 3,
 
-
+        
             turnToShoot = 3; // right drive joystick, not operator
     }
 
     public static class Speeds {
         public static final double speedLimit = 0.8,
                 moveSpeed = 0.6,
-                collectorClose = -0.8,
+                collectorClose = -0.7,
                 collectorOpen = 0.5,
                 collectorCollect = 0.55,
 
