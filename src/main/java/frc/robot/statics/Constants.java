@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -74,7 +75,7 @@ public final class Constants {
                 new WPI_VictorSPX(MotorPorts.topStorage));
         // public static final Motor<WPI_TalonSRX> FLY_WHEEL = new Motor<WPI_TalonSRX>(MotorPorts.flyWheel,
         //         new WPI_TalonSRX(MotorPorts.flyWheel));
-        public static final TalonSRX FLY_WHEEL = new TalonSRX(MotorPorts.flyWheel);
+        public static WPI_TalonSRX FLY_WHEEL = new WPI_TalonSRX(MotorPorts.flyWheel);
 
         // public static MotorGroup
         // CHASSIS_LEFT,
@@ -101,7 +102,8 @@ public final class Constants {
     }
 
     public static class JoystickPorts {
-        public static final int rightJoystick = 0,
+        public static final int 
+                rightJoystick = 0,
                 leftJoystick = 1,
                 operator = 2;
     }
@@ -134,7 +136,7 @@ public final class Constants {
                 collectorOpen = 0.5,
                 collectorCollect = 0.55,
 
-                SHOOT = 0.6,
+                SHOOT = 2.03, 
                 climberMotor = 0.6,
 
                 storageMotor = 0.5;
@@ -148,17 +150,19 @@ public final class Constants {
 
     public static class PhysicalConsts {
         public static final double SHOOT_HEIGHT = 0.87,
-                SHOOT_ANGLE = 54.227;// 60
+                SHOOT_ANGLE = 84.6;// 60
     }
 
+
     public static class PIDValues {
-        public static double FLY_WHEEL_KP = 0.000001,
-                FLY_WHEEL_KI = 0.000000,
-                FLY_WHEEL_KD = 0.000000,
+        public static double 
+                FLY_WHEEL_KP = 0.00001,
+                FLY_WHEEL_KI = 0.000000000000001 * 0,
+                FLY_WHEEL_KD = 0.000005,
+
 
                 TURN_KP = 0.007,
                 TURN_KI = 0.0035,
                 TURN_KD = 0.002;
-    }
-
+        }
 }

@@ -60,6 +60,10 @@ public class Vision {
 
     public float[] getXYZ(){
         // this.getLocals();
+        float[] newLocals={0,0,0};
+        for(int i=0; i<m_locals.length; i++){
+            newLocals[i] = (m_locals[i] + m_lastLocals[i])/2;
+        }
         return m_locals; 
     }
 

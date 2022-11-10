@@ -33,7 +33,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     //Constants.UsableMotors.init();
-
     m_robotContainer = new RobotContainer();
   }
 
@@ -46,7 +45,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("speed: ", (Constants.UsableMotors.FLY_WHEEL.getSelectedSensorVelocity() * Math.PI) / 8230);
     //SmartDashboard.putNumber("position: ", Constants.UsableMotors.FLY_WHEEL.getSelectedSensorPosition());
     double angle = Controls.m_hubVision.getAngleX();
     //SmartDashboard.putNumber("angle2", angle);

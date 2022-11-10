@@ -3,6 +3,7 @@ package frc.robot.statics;
 import java.util.LinkedList;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -13,6 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.EverLibEssentials.Motor;
+import frc.robot.EverLibEssentials.Motors;
 
 public class Controls {
     private static Joystick m_rightJoystick  = new Joystick(Constants.JoystickPorts.rightJoystick), m_leftJoystick, m_operator; 
@@ -26,6 +29,7 @@ public class Controls {
      Constants.PIDValues.FLY_WHEEL_KP,
      Constants.PIDValues.FLY_WHEEL_KI,
      Constants.PIDValues.FLY_WHEEL_KD);
+     
     
 
   public static void init() {
@@ -80,7 +84,8 @@ public class Controls {
     }
     if(!m_turbu.get()){ 
     tankDrive(speedVector.x, speedVector.y);
-    }else{
+    }
+    else{
       tankDrive(m_rightJoystick.getY(),  m_leftJoystick.getY() );
     }
   }
@@ -156,15 +161,16 @@ public static void unDriveStright(){
     turnPID.reset();
     finished = false;
   }
-
+  
   public static void shoot() {
     float distance = m_hubVision.getZ();
-    // double speed = calcTrajectory.calcSpeed(distance, Constants.PhysicalConsts.SHOOT_HEIGHT,
-    // Constants.PhysicalConsts.SHOOT_ANGLE);
-    // m_shootPidMotor.set(speed * Constants.Speeds.SHOOT);
-    // m_shootPidMotor.runMotor();
-    Constants.UsableMotors.FLY_WHEEL.set(ControlMode.PercentOutput, 0.69*1.07);
+    double target = calcTrajectory.calcSpeed(distance, Constants.PhysicalConsts.SHOOT_HEIGHT,
+    Constants.PhysicalConsts.SHOOT_ANGLE) * Constants.Speeds.SHOOT;
+    m_shootPidMotor.setTarget(23);
+    SmartDashboard.putNumber("target", target);
+    m_shootPidMotor.runMotor();
   }
+
   public static void shootAuto() {
     float distance = m_hubVision.getZ();
     // double speed = calcTrajectory.calcSpeed(distance, Constants.PhysicalConsts.SHOOT_HEIGHT,
@@ -221,6 +227,7 @@ public static void unDriveStright(){
       m_shootPidMotor.stop();
       Constants.UsableMotors.STORAGE_TOP.set(Constants.UsableMotors.STORAGE_TOP.get() +
         (m_storageDown.get() ? -1 : 0) * Constants.Speeds.storageMotor);
+        Constants.PIDValues.FLY_WHEEL_KP = 0.00001;
     }
     if(m_driveStright.get()){
       driveStright();

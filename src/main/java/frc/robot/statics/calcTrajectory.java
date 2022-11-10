@@ -1,4 +1,7 @@
 package frc.robot.statics;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class calcTrajectory {
 
     public static final double G = 9.807;
@@ -21,8 +24,8 @@ public class calcTrajectory {
         double a = ((G/2) * Math.pow(HorizontalError + distance, 2)) / Math.pow(cosA, 2);
 
         double b = (((HorizontalError + distance) * sinA) / cosA) - (targetHeight + VerticalError - startHeight);
-
-        return Math.sqrt(a / b);
+        
+        return Math.sqrt(Math.abs(a / b));
     }
 
     /**Calculates the speed needed to reach the target given an angle.
