@@ -18,6 +18,8 @@ public class PIDMotor {
     private double m_kp, m_ki, m_kd;
     private double m_lastError = 0, m_integral = 0, m_target = 0, m_setSpeed; //m_setSpeed is the precentage [-1 to 1]
     private Thread m_PIDThread;
+    private static boolean in = false;
+    private int count = 0;
     // private int m_full = 10000;
 
     public PIDMotor(TalonSRX motor, double kp, double ki, double kd){
@@ -26,7 +28,7 @@ public class PIDMotor {
         this.m_ki = ki;
         this.m_kd = kd;
         this.m_motor.configFactoryDefault();
-
+        
         m_PIDThread = new Thread(()->{
             // double lastDistance = m_encoder.getDistance();
             // int lastTime = (int)(System.currentTimeMillis() % this.m_full);
@@ -39,18 +41,21 @@ public class PIDMotor {
                 // } catch (Exception e) {
                 //     speed = 0;
                 // }
-                double speed = -this.m_motor.getSelectedSensorVelocity() * Math.PI/8230;
+                double speed = this.m_motor.getSelectedSensorVelocity() / 8192 * -1;
                 // PID
+               // SmartDashboard.putNumber("revolutions", m_motor.getSelectedSensorPosition() * Math.PI/4115);
+               
                 SmartDashboard.putNumber("speed", speed);
+                SmartDashboard.putNumber("vel", m_motor.getSelectedSensorVelocity());
+                SmartDashboard.putNumber("distance", m_motor.getSelectedSensorPosition());
+                // SmartDashboard.putNumber("target", m_target);
+                // SmartDashboard.putNumber("revolutions", m_motor);
                 double error = this.m_target - speed;
                 double finalSpeed = error * this.m_kp; // P
                 finalSpeed += this.m_integral * this.m_ki; // I
-                finalSpeed -= (error - this.m_lastError) *this.m_kd; // D
-                //SmartDashboard.putNumber("finalSpeed", finalSpeed);
+                finalSpeed -= (error - this.m_lastError) * this.m_kd; // D
                 //SmartDashboard.putNumber("setSpeed", m_setSpeed);
-
                 this.m_setSpeed += finalSpeed;
-                SmartDashboard.putNumber("set speed", m_setSpeed);
                 //runMotor();
             }
         });
@@ -64,14 +69,13 @@ public class PIDMotor {
     }
 
     public void runMotor(){
-        if(-Constants.UsableMotors.FLY_WHEEL.getSelectedSensorVelocity() * Math.PI/8230 >= m_target){
-            this.m_motor.set(ControlMode.PercentOutput, 0.1);
-            // Constants.PIDValues.FLY_WHEEL_KP = 0.000000000000000000000001;
+        if(m_setSpeed < 0){
+            m_setSpeed = 0;
+            return;
         }
-        else{
-            // this.m_motor.set(ControlMode.PercentOutput, Math.min(Math.max(m_setSpeed, -1),1));
-        }
-        // this.m_motor.set(ControlMode.Velocity, 23);
+        SmartDashboard.putNumber("set speed", m_setSpeed);
+        SmartDashboard.putNumber("actual", Math.min(Math.max(m_setSpeed, -1),1));
+        this.m_motor.set(ControlMode.PercentOutput, Math.min(Math.max(m_setSpeed, -1),1));
     }
 
     public void stop(){
@@ -79,5 +83,6 @@ public class PIDMotor {
         m_integral = 0;
         m_target = 0;
         this.m_motor.set(ControlMode.PercentOutput, 0);
+        in = false;
     }
 }

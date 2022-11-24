@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
@@ -67,6 +68,7 @@ public class Controls {
     Constants.UsableMotors.BOTTOM_STORAGE.setInverted(true);
     Constants.UsableMotors.STORAGE_TOP.setInverted(true);
     Constants.UsableMotors.FLY_WHEEL.configFactoryDefault();
+    Constants.UsableMotors.FLY_WHEEL.setSensorPhase(false);
     // initialize commands on buttons
 
   }
@@ -124,14 +126,17 @@ public static void unDriveStright(){
   finished2 = false;
   
 }
-  private static PIDController turnPID = new PIDController(Constants.PIDValues.TURN_KP,
+
+private static PIDController turnPID = new PIDController(Constants.PIDValues.TURN_KP,
    Constants.PIDValues.TURN_KI, Constants.PIDValues.TURN_KD);
+
    private static PIDController movePID = new PIDController(0.0001,
    0, 0);
   public static LinkedList<Double> a = new LinkedList<Double>();
   public static LinkedList<Double> b = new LinkedList<Double>();
 
   public static boolean finished = false;
+
   public static void turnToShoot(){
     
     double angle = m_hubVision.getAngleX();
@@ -145,7 +150,7 @@ public static void unDriveStright(){
     //SmartDashboard.putNumber(*"turnSpeed", speed);
     //SmartDashboard.putNumber("angle", angle);
     if (!finished && Math.abs(angle)>3) {
-      tankDrive(-Math.signum(angle)*0.17, Math.signum(angle)*0.17);
+      tankDrive(-Math.signum(angle)*0.2, Math.signum(angle)*0.2);
     }
     else{
       tankDrive(0,0);
@@ -157,6 +162,12 @@ public static void unDriveStright(){
     //  Constants.PhysicalConsts.SHOOT_ANGLE);
     //  m_shootPidMotor.set(speed * Constants.Speeds.SHOOT);
   }
+  public static void PIDturnToShoot(){
+    double angle = m_hubVision.getAngleX();
+    double speed = turnPID.calculate(angle,0);
+    SmartDashboard.putNumber("turnSpeed", speed);
+    SmartDashboard.putNumber("angle", angle);
+  }
   public static void unTurnToShoot(){
     turnPID.reset();
     finished = false;
@@ -165,9 +176,9 @@ public static void unDriveStright(){
   public static void shoot() {
     float distance = m_hubVision.getZ();
     double target = calcTrajectory.calcSpeed(distance, Constants.PhysicalConsts.SHOOT_HEIGHT,
-    Constants.PhysicalConsts.SHOOT_ANGLE) * Constants.Speeds.SHOOT;
-    m_shootPidMotor.setTarget(23);
-    SmartDashboard.putNumber("target", target);
+    Constants.PhysicalConsts.SHOOT_ANGLE) / 2;
+    m_shootPidMotor.setTarget(SmartDashboard.getNumber("target", 0));
+    // SmartDashboard.putNumber("target", target);
     m_shootPidMotor.runMotor();
   }
 
@@ -227,7 +238,6 @@ public static void unDriveStright(){
       m_shootPidMotor.stop();
       Constants.UsableMotors.STORAGE_TOP.set(Constants.UsableMotors.STORAGE_TOP.get() +
         (m_storageDown.get() ? -1 : 0) * Constants.Speeds.storageMotor);
-        Constants.PIDValues.FLY_WHEEL_KP = 0.00001;
     }
     if(m_driveStright.get()){
       driveStright();

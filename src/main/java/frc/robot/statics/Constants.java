@@ -73,8 +73,6 @@ public final class Constants {
                 new WPI_VictorSPX(MotorPorts.bottomStorage));
         public static final Motor<WPI_VictorSPX> STORAGE_TOP = new Motor<WPI_VictorSPX>(MotorPorts.topStorage,
                 new WPI_VictorSPX(MotorPorts.topStorage));
-        // public static final Motor<WPI_TalonSRX> FLY_WHEEL = new Motor<WPI_TalonSRX>(MotorPorts.flyWheel,
-        //         new WPI_TalonSRX(MotorPorts.flyWheel));
         public static WPI_TalonSRX FLY_WHEEL = new WPI_TalonSRX(MotorPorts.flyWheel);
 
         // public static MotorGroup
@@ -136,7 +134,7 @@ public final class Constants {
                 collectorOpen = 0.5,
                 collectorCollect = 0.55,
 
-                SHOOT = 2.03, 
+                // SHOOT = 2.03, 
                 climberMotor = 0.6,
 
                 storageMotor = 0.5;
@@ -156,9 +154,9 @@ public final class Constants {
 
     public static class PIDValues {
         public static double 
-                FLY_WHEEL_KP = 0.00001,
-                FLY_WHEEL_KI = 0.000000000000001 * 0,
-                FLY_WHEEL_KD = 0.000005,
+                FLY_WHEEL_KP = 0.000008,               //0.00001 used to work //0.0000048
+                FLY_WHEEL_KI = 0.00000000000000184,    //0.0000000000000013 used to work
+                FLY_WHEEL_KD = 0.000005,                //0.000007 used to work
 
 
                 TURN_KP = 0.007,
