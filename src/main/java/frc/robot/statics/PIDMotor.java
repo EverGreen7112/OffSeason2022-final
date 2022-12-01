@@ -18,9 +18,6 @@ public class PIDMotor {
     private double m_kp, m_ki, m_kd;
     private double m_lastError = 0, m_integral = 0, m_target = 0, m_setSpeed; //m_setSpeed is the precentage [-1 to 1]
     private Thread m_PIDThread;
-    private static boolean in = false;
-    private int count = 0;
-    // private int m_full = 10000;
 
     public PIDMotor(TalonSRX motor, double kp, double ki, double kd){
         this.m_motor = motor;
@@ -30,31 +27,16 @@ public class PIDMotor {
         this.m_motor.configFactoryDefault();
         
         m_PIDThread = new Thread(()->{
-            // double lastDistance = m_encoder.getDistance();
-            // int lastTime = (int)(System.currentTimeMillis() % this.m_full);
             while(true){
-                // double distance = m_encoder.getDistance();
-                // int time = (int)(System.currentTimeMillis() % this.m_full);
-                // double speed;
-                // try {
-                //     speed = (distance - lastDistance) / (time - lastTime);
-                // } catch (Exception e) {
-                //     speed = 0;
-                // }
-                double speed = this.m_motor.getSelectedSensorVelocity() / 8192 * -1;
-                // PID
-               // SmartDashboard.putNumber("revolutions", m_motor.getSelectedSensorPosition() * Math.PI/4115);
-               
+                double speed = this.m_motor.getSelectedSensorVelocity() / -Constants.Values.TICKS_PER_REVOLUTIONS; //make 100ms to minute
+                // PID               
                 SmartDashboard.putNumber("speed", speed);
                 SmartDashboard.putNumber("vel", m_motor.getSelectedSensorVelocity());
                 SmartDashboard.putNumber("distance", m_motor.getSelectedSensorPosition());
-                // SmartDashboard.putNumber("target", m_target);
-                // SmartDashboard.putNumber("revolutions", m_motor);
                 double error = this.m_target - speed;
                 double finalSpeed = error * this.m_kp; // P
                 finalSpeed += this.m_integral * this.m_ki; // I
                 finalSpeed -= (error - this.m_lastError) * this.m_kd; // D
-                //SmartDashboard.putNumber("setSpeed", m_setSpeed);
                 this.m_setSpeed += finalSpeed;
                 //runMotor();
             }
@@ -79,10 +61,6 @@ public class PIDMotor {
     }
 
     public void stop(){
-        m_lastError = 0;
-        m_integral = 0;
-        m_target = 0;
         this.m_motor.set(ControlMode.PercentOutput, 0);
-        in = false;
     }
 }

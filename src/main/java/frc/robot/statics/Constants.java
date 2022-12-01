@@ -163,4 +163,14 @@ public final class Constants {
                 TURN_KI = 0.0035,
                 TURN_KD = 0.002;
         }
+
+        public static class Values{
+                public static final int
+                        TICKS_PER_REVOLUTIONS = 8196;
+        }
+
+        public static class FilesNames{
+                public static final String
+                        SHOOTER_LINEAR_INTERPULATION = "ShootingData.txt";
+        }
 }

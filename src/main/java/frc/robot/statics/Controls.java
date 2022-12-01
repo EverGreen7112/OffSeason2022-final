@@ -177,7 +177,8 @@ private static PIDController turnPID = new PIDController(Constants.PIDValues.TUR
     float distance = m_hubVision.getZ();
     double target = calcTrajectory.calcSpeed(distance, Constants.PhysicalConsts.SHOOT_HEIGHT,
     Constants.PhysicalConsts.SHOOT_ANGLE) / 2;
-    m_shootPidMotor.setTarget(SmartDashboard.getNumber("target", 0));
+    // m_shootPidMotor.setTarget(SmartDashboard.getNumber("target", 0));
+    m_shootPidMotor.setTarget(8);
     // SmartDashboard.putNumber("target", target);
     m_shootPidMotor.runMotor();
   }
