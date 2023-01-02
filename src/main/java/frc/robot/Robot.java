@@ -87,6 +87,7 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("target2", 0);
     Controls.init();
     SmartDashboard.putNumber("target", 0);
+    Controls.m_shootPidMotor.reset();
   }
 
   /** This function is called periodically during operator control. */
@@ -94,7 +95,6 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Controls.movePeriodic();
     Motors.runMotors();
-
     SmartDashboard.putNumber("ticks", Constants.UsableMotors.FLY_WHEEL.getSelectedSensorPosition());
   }
 

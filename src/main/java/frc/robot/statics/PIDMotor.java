@@ -63,4 +63,10 @@ public class PIDMotor {
     public void stop(){
         this.m_motor.set(ControlMode.PercentOutput, 0);
     }
+    public void reset(){
+        this.m_setSpeed = 0;
+        this.m_integral = 0;
+        this.m_target = 0;
+        this.m_lastError = 0;
+    }
 }

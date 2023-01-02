@@ -155,8 +155,8 @@ public final class Constants {
     public static class PIDValues {
         public static double 
                 FLY_WHEEL_KP = 0.000008,               //0.00001 used to work //0.0000048
-                FLY_WHEEL_KI = 0.00000000000000184,    //0.0000000000000013 used to work
-                FLY_WHEEL_KD = 0.000005,                //0.000007 used to work
+                FLY_WHEEL_KI = 0.00000000000000,    //0.0000000000000013 used to work 0.00000000000000184
+                FLY_WHEEL_KD = 0.000006,                //0.000007 used to work
 
 
                 TURN_KP = 0.007,

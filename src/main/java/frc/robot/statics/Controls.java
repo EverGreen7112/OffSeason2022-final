@@ -26,7 +26,7 @@ public class Controls {
    m_climberUp, m_storageUp, m_storageDown, m_load, m_turnToShoot,m_driveStright, m_turbu = new JoystickButton(m_rightJoystick, 1);
 
    public static Vision m_hubVision = new Vision(Constants.ComPorts.hubVision);
-   private static PIDMotor m_shootPidMotor = new PIDMotor(Constants.UsableMotors.FLY_WHEEL,
+   public static PIDMotor m_shootPidMotor = new PIDMotor(Constants.UsableMotors.FLY_WHEEL,
      Constants.PIDValues.FLY_WHEEL_KP,
      Constants.PIDValues.FLY_WHEEL_KI,
      Constants.PIDValues.FLY_WHEEL_KD);
@@ -175,11 +175,10 @@ private static PIDController turnPID = new PIDController(Constants.PIDValues.TUR
   
   public static void shoot() {
     float distance = m_hubVision.getZ();
-    double target = calcTrajectory.calcSpeed(distance, Constants.PhysicalConsts.SHOOT_HEIGHT,
-    Constants.PhysicalConsts.SHOOT_ANGLE) / 2;
-    // m_shootPidMotor.setTarget(SmartDashboard.getNumber("target", 0));
-    m_shootPidMotor.setTarget(8);
-    // SmartDashboard.putNumber("target", target);
+    // double target = calcTrajectory.calcSpeed(distance, Constants.PhysicalConsts.SHOOT_HEIGHT,
+    // Constants.PhysicalConsts.SHOOT_ANGLE) / 2;
+    m_shootPidMotor.setTarget(SmartDashboard.getNumber("target", 0));
+    // SmartDashboard.putNumber("target", );
     m_shootPidMotor.runMotor();
   }
 
