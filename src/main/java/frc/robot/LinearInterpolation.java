@@ -20,6 +20,10 @@ public class LinearInterpolation {
     }
 
     public double interpolate(double x) {
+        if(m_data.length == 0){
+            System.out.println("Cann");
+            return 0;
+        }
         if (x > m_data[m_data.length - 1].getX()) {
             return m_data[m_data.length - 1].getY();
         }
@@ -27,7 +31,7 @@ public class LinearInterpolation {
             return m_data[0].getY();
         }
         int i = 0;
-        while (x < m_data[i].getX()) {
+        while (x > m_data[i].getX()) {
             i++;
         }
         double m = (m_data[i].getY() - m_data[i-1].getY()) / (m_data[i].getX() - m_data[i-1].getX());//m is the slope

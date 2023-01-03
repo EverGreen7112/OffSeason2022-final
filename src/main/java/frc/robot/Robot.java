@@ -102,13 +102,15 @@ public class Robot extends TimedRobot {
   public void testInit() {
     //Motors.deleteRecordingsByOrder(300);
     ////SmartDashboard.putString("motor", PWMChannel.valueOf(1).name());
+
+
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
 
-    Motors.runMotors();
+    
   }
 
   /** This function is called once when the robot is first started up. */
