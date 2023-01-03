@@ -236,6 +236,7 @@ private static PIDController turnPID = new PIDController(Constants.PIDValues.TUR
     }
     else{
       m_shootPidMotor.stop();
+      m_shootPidMotor.reset();
       Constants.UsableMotors.STORAGE_TOP.set(Constants.UsableMotors.STORAGE_TOP.get() +
         (m_storageDown.get() ? -1 : 0) * Constants.Speeds.storageMotor);
     }
