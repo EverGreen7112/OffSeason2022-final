@@ -167,6 +167,8 @@ public final class Constants {
         public static class Values{
                 public static final int
                         TICKS_PER_REVOLUTIONS = 8196;
+                public static final double
+                        TOLERANCE = 0.5;
         }
 
         public static class FilesNames{

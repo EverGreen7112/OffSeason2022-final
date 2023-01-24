@@ -23,7 +23,7 @@ import frc.robot.EverLibEssentials.Motor;
 import frc.robot.EverLibEssentials.Motors;
 
 public class Controls {
-  private static Joystick m_rightJoystick = new Joystick(Constants.JoystickPorts.rightJoystick), m_leftJoystick,
+  public static Joystick m_rightJoystick = new Joystick(Constants.JoystickPorts.rightJoystick), m_leftJoystick,
       m_operator;
   private static JoystickButton m_cancelAll;
   private static Trigger m_fire;
