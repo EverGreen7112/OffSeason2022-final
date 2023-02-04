@@ -201,16 +201,36 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("joystick y", Controls.m_rightJoystick.getY());
     SmartDashboard.putNumber("target", Constants.UsableMotors.FLY_WHEEL.getClosedLoopTarget());
     SmartDashboard.putNumber("error", Constants.UsableMotors.FLY_WHEEL.getClosedLoopError());
-    if (Math.abs(Controls.m_rightJoystick.getX()) < Constants.Values.TOLERANCE && Math.abs(Controls.m_rightJoystick.getY()) < Constants.Values.TOLERANCE) {
-      return;
-    }
+    
+    // if (Math.abs(Controls.m_rightJoystick.getX()) < Constants.Values.TOLERANCE && Math.abs(Controls.m_rightJoystick.getY()) < Constants.Values.TOLERANCE) {
+    //   return;
+    // }
     m_JoystickAngle = Math.toDegrees(Math.atan2(Controls.m_rightJoystick.getX(), Controls.m_rightJoystick.getY()));
     double m_flyWheelAngle = ticksToAngle(Constants.UsableMotors.FLY_WHEEL.getSelectedSensorPosition());
-    double m_flyWheelTarget = angleToTicks(m_JoystickAngle);
-    Constants.UsableMotors.FLY_WHEEL.set(TalonSRXControlMode.Position, Math.abs(m_flyWheelTarget));
+    //double m_flyWheelTarget = angleToTicks(m_JoystickAngle);
+    double m_flyWheelTarget = angleToTicks(m_flyWheelAngle + closestAngle(m_flyWheelAngle, m_JoystickAngle));
+    Constants.UsableMotors.FLY_WHEEL.set(TalonSRXControlMode.Position, m_flyWheelTarget);
     SmartDashboard.putNumber("fly wheel angle", m_flyWheelAngle);
     SmartDashboard.putNumber("Joystick angle", m_JoystickAngle);
   }
+  /**
+	 * Get the closest angle between the given angles.
+	 */
+	private static double closestAngle(double a, double b)
+	{
+	        // get direction
+	        double dir = modulo(b, 360.0) - modulo(a, 360.0);
+
+	        // convert from -360 to 360 to -180 to 180
+	        if (Math.abs(dir) > 180.0)
+	        {
+	                dir = -(Math.signum(dir) * 360.0) + dir;
+	        }
+	        return dir;
+	}
+	private static double modulo(double a, double b) {
+		return ((a % b)+ b )% b;
+	}
 
   public static double angleToTicks(double angle){
     return Constants.Values.TICKS_PER_REVOLUTIONS / ((double) 360 / angle);
