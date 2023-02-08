@@ -189,7 +189,8 @@ public class Robot extends TimedRobot {
     m_JoystickAngle = 0;
   }
 
-  int n=0;
+  int minRange = 0;
+  int maxRange = 180;
 
   /** This function is called periodically during test mode. */
   @Override
@@ -201,14 +202,23 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("joystick y", Controls.m_rightJoystick.getY());
     SmartDashboard.putNumber("target", Constants.UsableMotors.FLY_WHEEL.getClosedLoopTarget());
     SmartDashboard.putNumber("error", Constants.UsableMotors.FLY_WHEEL.getClosedLoopError());
-    
+  
+
     // if (Math.abs(Controls.m_rightJoystick.getX()) < Constants.Values.TOLERANCE && Math.abs(Controls.m_rightJoystick.getY()) < Constants.Values.TOLERANCE) {
     //   return;
     // }
+
     m_JoystickAngle = Math.toDegrees(Math.atan2(Controls.m_rightJoystick.getX(), Controls.m_rightJoystick.getY()));
+    
     double m_flyWheelAngle = ticksToAngle(Constants.UsableMotors.FLY_WHEEL.getSelectedSensorPosition());
     //double m_flyWheelTarget = angleToTicks(m_JoystickAngle);
-    double m_flyWheelTarget = angleToTicks(m_flyWheelAngle + closestAngle(m_flyWheelAngle, m_JoystickAngle));
+    double m_flyWheelTarget = 0;
+    if(m_JoystickAngle < minRange && m_JoystickAngle == 0)
+      m_flyWheelTarget = angleToTicks(m_flyWheelAngle + closestAngle(minRange, m_JoystickAngle));
+    else if(m_JoystickAngle > maxRange && m_JoystickAngle == 0)
+      m_flyWheelTarget = angleToTicks(m_flyWheelAngle + closestAngle(maxRange, m_JoystickAngle));
+    else
+      m_flyWheelTarget = angleToTicks(m_flyWheelAngle + closestAngle(m_flyWheelAngle, m_JoystickAngle));
     Constants.UsableMotors.FLY_WHEEL.set(TalonSRXControlMode.Position, m_flyWheelTarget);
     SmartDashboard.putNumber("fly wheel angle", m_flyWheelAngle);
     SmartDashboard.putNumber("Joystick angle", m_JoystickAngle);
