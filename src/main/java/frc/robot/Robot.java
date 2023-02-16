@@ -13,11 +13,14 @@ import com.kauailabs.navx.frc.AHRS;
 import org.opencv.core.Mat;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.EverLibEssentials.Motors;
 import frc.robot.statics.Autonomus;
 import frc.robot.statics.Constants;
 import frc.robot.statics.Controls;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -50,6 +53,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     navX = new AHRS(I2C.Port.kMXP);
     Constants.UsableMotors.FLY_WHEEL.setSelectedSensorPosition(0);
+    navX.resetDisplacement();
   }
 
   /**
@@ -68,7 +72,7 @@ public class Robot extends TimedRobot {
   public static double x = 0;
   public static double velocityY = 0;
   public static double y = 0;
-  public static double velocityZ = 0;
+  // public static double velocityZ = 0;
   public static double z = 0;
 
   @Override
@@ -84,34 +88,52 @@ public class Robot extends TimedRobot {
 
     long time = System.currentTimeMillis();
     double deltaTime = ((time - lastTime) / 1000.0);
-    SmartDashboard.putNumber("delta", deltaTime);
+    SmartDashboard.putNumber("deltaTime", deltaTime);
     lastTime = time;
 
-    double accelerationZ = (navX.getWorldLinearAccelZ() * 9.806);
     double accelerationX = (navX.getWorldLinearAccelX() * 9.806);
     double accelerationY = (navX.getWorldLinearAccelY() * 9.806);
+    double accelerationZ = (navX.getWorldLinearAccelZ() * 9.806);
 
-    double deltaVelocityX = accelerationX * deltaTime;
-    double deltaX = velocityX * deltaTime + 0.5 * (accelerationX * deltaTime * deltaTime);
-    velocityX += deltaVelocityX;
-    x += deltaX;
+    velocityX += accelerationX * deltaTime;
+    velocityY += accelerationY * deltaTime;
 
-    double deltaVelocityY = accelerationY * deltaTime;
-    double deltaY = velocityY * deltaTime + 0.5 * (accelerationY * deltaTime * deltaTime);
-    velocityY += deltaVelocityY;
-    y += deltaY;
+    if(Math.abs(velocityX) <= 0.0 || accelerationX == 0){
+      velocityX = 0;
+    }
+    if(Math.abs(velocityY) <= 0.0 || accelerationY == 0){
+      velocityY = 0;
+    }
 
-    double deltaVelocityZ = accelerationZ * deltaTime;
-    double deltaZ = velocityZ * deltaTime + 0.5 * (accelerationZ * deltaTime * deltaTime);
-    velocityZ += deltaVelocityZ;
-    z += deltaZ;
+    // double deltaVelocityX = accelerationX * deltaTime;
+    // double deltaX = velocityX * deltaTime + 0.5 * (accelerationX * deltaTime * deltaTime);
+    // velocityX += deltaVelocityX;
+    // x += deltaX;
+
+    // double deltaVelocityY = accelerationY * deltaTime;
+    // double deltaY = velocityY * deltaTime + 0.5 * (accelerationY * deltaTime * deltaTime);
+    // velocityY += deltaVelocityY;
+    // y += deltaY;
+
+    // double deltaVelocityZ = accelerationZ * deltaTime;
+    // double deltaZ = velocityZ * deltaTime + 0.5 * (accelerationZ * deltaTime * deltaTime);
+    // velocityZ += deltaVelocityZ;
+    // z += deltaZ;
+
+    x += velocityX * deltaTime;
+    y += velocityY * deltaTime;
 
     SmartDashboard.putNumber("x", x);
     SmartDashboard.putNumber("y", y);
     SmartDashboard.putNumber("z", z);
     SmartDashboard.putNumber("vx", velocityX);
     SmartDashboard.putNumber("vy", velocityY);
-    SmartDashboard.putNumber("vz", velocityZ);
+    // SmartDashboard.putNumber("vz", velocityZ);
+    SmartDashboard.putNumber("accelX", accelerationX);
+    SmartDashboard.putNumber("accelY", accelerationY);    
+    SmartDashboard.putNumber("Xdisplacement", navX.getDisplacementX());
+    SmartDashboard.putNumber("Ydisplacement", navX.getDisplacementY());
+    SmartDashboard.putNumber("Zdisplacement", navX.getDisplacementZ());
 
     // double m_angle = Math.toDegrees(Math.atan2(Controls.m_rightJoystick.getX(),
     // Controls.m_rightJoystick.getY()));
