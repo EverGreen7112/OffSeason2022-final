@@ -42,7 +42,6 @@ public class Robot extends TimedRobot {
    * for any
    * initialization code.
    */
-  public static AHRS navX;
 
   @Override
   public void robotInit() {
@@ -51,9 +50,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     // Constants.UsableMotors.init();
     m_robotContainer = new RobotContainer();
-    navX = new AHRS(I2C.Port.kMXP);
     Constants.UsableMotors.FLY_WHEEL.setSelectedSensorPosition(0);
-    navX.resetDisplacement();
   }
 
   /**
@@ -67,80 +64,9 @@ public class Robot extends TimedRobot {
    * and
    * SmartDashboard integrated updating.
    */
-  public static long lastTime = System.currentTimeMillis();
-  public static double velocityX = 0;
-  public static double x = 0;
-  public static double velocityY = 0;
-  public static double y = 0;
-  // public static double velocityZ = 0;
-  public static double z = 0;
 
   @Override
   public void robotPeriodic() {
-    // SmartDashboard.putNumber("position: ",
-    // Constants.UsableMotors.FLY_WHEEL.getSelectedSensorPosition());
-    double angle = Controls.m_hubVision.getAngleX();
-    SmartDashboard.putNumber("yaw", navX.getYaw());
-    SmartDashboard.putNumber("pitch", navX.getPitch());
-    SmartDashboard.putNumber("roll", navX.getRoll());
-    SmartDashboard.putNumber("angle", navX.getAngle());
-    SmartDashboard.putNumber("accel", navX.getWorldLinearAccelZ() * 9.806);
-
-    long time = System.currentTimeMillis();
-    double deltaTime = ((time - lastTime) / 1000.0);
-    SmartDashboard.putNumber("deltaTime", deltaTime);
-    lastTime = time;
-
-    double accelerationX = (navX.getWorldLinearAccelX() * 9.806);
-    double accelerationY = (navX.getWorldLinearAccelY() * 9.806);
-    double accelerationZ = (navX.getWorldLinearAccelZ() * 9.806);
-
-    velocityX += accelerationX * deltaTime;
-    velocityY += accelerationY * deltaTime;
-
-    if(Math.abs(velocityX) <= 0.0 || accelerationX == 0){
-      velocityX = 0;
-    }
-    if(Math.abs(velocityY) <= 0.0 || accelerationY == 0){
-      velocityY = 0;
-    }
-
-    // double deltaVelocityX = accelerationX * deltaTime;
-    // double deltaX = velocityX * deltaTime + 0.5 * (accelerationX * deltaTime * deltaTime);
-    // velocityX += deltaVelocityX;
-    // x += deltaX;
-
-    // double deltaVelocityY = accelerationY * deltaTime;
-    // double deltaY = velocityY * deltaTime + 0.5 * (accelerationY * deltaTime * deltaTime);
-    // velocityY += deltaVelocityY;
-    // y += deltaY;
-
-    // double deltaVelocityZ = accelerationZ * deltaTime;
-    // double deltaZ = velocityZ * deltaTime + 0.5 * (accelerationZ * deltaTime * deltaTime);
-    // velocityZ += deltaVelocityZ;
-    // z += deltaZ;
-
-    x += velocityX * deltaTime;
-    y += velocityY * deltaTime;
-
-    SmartDashboard.putNumber("x", x);
-    SmartDashboard.putNumber("y", y);
-    SmartDashboard.putNumber("z", z);
-    SmartDashboard.putNumber("vx", velocityX);
-    SmartDashboard.putNumber("vy", velocityY);
-    // SmartDashboard.putNumber("vz", velocityZ);
-    SmartDashboard.putNumber("accelX", accelerationX);
-    SmartDashboard.putNumber("accelY", accelerationY);    
-    SmartDashboard.putNumber("Xdisplacement", navX.getDisplacementX());
-    SmartDashboard.putNumber("Ydisplacement", navX.getDisplacementY());
-    SmartDashboard.putNumber("Zdisplacement", navX.getDisplacementZ());
-
-    // double m_angle = Math.toDegrees(Math.atan2(Controls.m_rightJoystick.getX(),
-    // Controls.m_rightJoystick.getY()));
-    // if(m_angle < 0){
-    // m_angle += 360;
-    // }
-    // SmartDashboard.putNumber("Joystick angle", m_angle);
     SmartDashboard.putNumber("temp", Constants.UsableMotors.FLY_WHEEL.getTemperature());
   }
 
@@ -212,7 +138,7 @@ public class Robot extends TimedRobot {
   }
 
   int minRange = 0;
-  int maxRange = 180;
+  int maxRange = 270;
 
   /** This function is called periodically during test mode. */
   @Override
@@ -220,28 +146,22 @@ public class Robot extends TimedRobot {
     if(Constants.UsableMotors.FLY_WHEEL.getTemperature() >= 30){
       return;
     }
-    SmartDashboard.putNumber("joystick x", Controls.m_rightJoystick.getX());
-    SmartDashboard.putNumber("joystick y", Controls.m_rightJoystick.getY());
-    SmartDashboard.putNumber("target", Constants.UsableMotors.FLY_WHEEL.getClosedLoopTarget());
-    SmartDashboard.putNumber("error", Constants.UsableMotors.FLY_WHEEL.getClosedLoopError());
-  
-
-    // if (Math.abs(Controls.m_rightJoystick.getX()) < Constants.Values.TOLERANCE && Math.abs(Controls.m_rightJoystick.getY()) < Constants.Values.TOLERANCE) {
-    //   return;
-    // }
-
-    m_JoystickAngle = Math.toDegrees(Math.atan2(Controls.m_rightJoystick.getX(), Controls.m_rightJoystick.getY()));
-    
+    if (Math.abs(Controls.m_rightJoystick.getX()) < Constants.Values.TOLERANCE && Math.abs(Controls.m_rightJoystick.getY()) < Constants.Values.TOLERANCE) {
+      return;
+    }
+    double m_JoystickAngle = Math.toDegrees(Math.atan2(Controls.m_rightJoystick.getX(), Controls.m_rightJoystick.getY()));
+    if(m_JoystickAngle <= 0)
+     m_JoystickAngle += 360;
     double m_flyWheelAngle = ticksToAngle(Constants.UsableMotors.FLY_WHEEL.getSelectedSensorPosition());
-    //double m_flyWheelTarget = angleToTicks(m_JoystickAngle);
-    double m_flyWheelTarget = 0;
-    if(m_JoystickAngle < minRange && m_JoystickAngle == 0)
-      m_flyWheelTarget = angleToTicks(m_flyWheelAngle + closestAngle(minRange, m_JoystickAngle));
-    else if(m_JoystickAngle > maxRange && m_JoystickAngle == 0)
-      m_flyWheelTarget = angleToTicks(m_flyWheelAngle + closestAngle(maxRange, m_JoystickAngle));
-    else
-      m_flyWheelTarget = angleToTicks(m_flyWheelAngle + closestAngle(m_flyWheelAngle, m_JoystickAngle));
-    Constants.UsableMotors.FLY_WHEEL.set(TalonSRXControlMode.Position, m_flyWheelTarget);
+    double m_flyWheelTarget = angleToTicks(m_flyWheelAngle + closestAngle(m_flyWheelAngle, m_JoystickAngle));
+    if (m_JoystickAngle <= maxRange && m_JoystickAngle >= minRange){
+      if (Math.abs(m_JoystickAngle - Math.abs(modulo(ticksToAngle(m_flyWheelTarget), 360))) > maxRange + 5 || Math.abs(m_JoystickAngle - Math.abs(modulo(ticksToAngle(m_flyWheelTarget), 360))) < minRange - 5){
+        Constants.UsableMotors.FLY_WHEEL.set(TalonSRXControlMode.Position, m_flyWheelTarget);
+      }
+      else {
+        Constants.UsableMotors.FLY_WHEEL.set(TalonSRXControlMode.Position, angleToTicks(m_JoystickAngle));
+      }
+    }
     SmartDashboard.putNumber("fly wheel angle", m_flyWheelAngle);
     SmartDashboard.putNumber("Joystick angle", m_JoystickAngle);
   }
